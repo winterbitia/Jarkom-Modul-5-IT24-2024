@@ -51,9 +51,9 @@ A2 | NewEridu > LuminaSquare > PubSec > Policeboo + Jane | 231 | /24
 A3 | NewEridu > LuminaSquare > Ofc.Mewmew > HIA + BalletTwins | 3 | /29
 A4 | NewEridu > LuminaSquare > Ofc.Mewmew > BalletTwins > Victoria > Lycaon + Ellen | 121 | /25
 A5 | NewEridu > SixStreet | 2 | /30
-A6 | NewEridu > SixStreet > RandomPlay > HDD > Fairy | 3 | /29
+A6 | NewEridu > SixStreet > RandomPlay > HDD + Fairy | 3 | /29
 A7 | NewEridu > SixStreet > Metro > ScootOutpost + OuterRing | 3 | /29
-A8 | NewEridu > SixStreet > Metro > OuterRing > SoC > Caesar > Burnice | 56 | /26
+A8 | NewEridu > SixStreet > Metro > OuterRing > SoC > Caesar + Burnice | 56 | /26
 A9 | NewEridu > SixStreet > Metro > ScootOutpost > HollowZero | 2 | /30
 Total |  | 233 | /23
 
