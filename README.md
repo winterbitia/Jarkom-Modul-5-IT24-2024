@@ -55,7 +55,7 @@ A6 | NewEridu > SixStreet > RandomPlay > HDD + Fairy | 3 | /29
 A7 | NewEridu > SixStreet > Metro > ScootOutpost + OuterRing | 3 | /29
 A8 | NewEridu > SixStreet > Metro > OuterRing > SoC > Caesar + Burnice | 56 | /26
 A9 | NewEridu > SixStreet > Metro > ScootOutpost > HollowZero | 2 | /30
-Total |  | 233 | /23
+Total |  | 423 | /23
 
 ### Pembagian IP
 
