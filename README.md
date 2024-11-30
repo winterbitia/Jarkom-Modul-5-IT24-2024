@@ -313,57 +313,57 @@ Untuk routing diperlukan sebuah script untuk dijalankan ketika mesin menyala, co
 
 ```bash
 # Melewati A1: (A2-A4)
-route add -net 192.245.0.0 netmask 255.255.255.0 gw 192.245.1.218
-route add -net 192.245.1.192 netmask 255.255.255.248 gw 192.245.1.218
-route add -net 192.245.1.0 netmask 255.255.255.128 gw 192.245.1.218
+post-up route add -net 192.245.0.0 netmask 255.255.255.0 gw 192.245.1.218
+post-up route add -net 192.245.1.192 netmask 255.255.255.248 gw 192.245.1.218
+post-up route add -net 192.245.1.0 netmask 255.255.255.128 gw 192.245.1.218
 # Melewati A5: (A6-A9)
-route add -net 192.245.1.200 netmask 255.255.255.248 gw 192.245.1.222
-route add -net 192.245.1.208 netmask 255.255.255.248 gw 192.245.1.222
-route add -net 192.245.1.128 netmask 255.255.255.192 gw 192.245.1.222
-route add -net 192.245.1.224 netmask 255.255.255.252 gw 192.245.1.222
+post-up route add -net 192.245.1.200 netmask 255.255.255.248 gw 192.245.1.222
+post-up route add -net 192.245.1.208 netmask 255.255.255.248 gw 192.245.1.222
+post-up route add -net 192.245.1.128 netmask 255.255.255.192 gw 192.245.1.222
+post-up route add -net 192.245.1.224 netmask 255.255.255.252 gw 192.245.1.222
 ```
 
 #### LuminaSquare (Router) - Selain A1, A2, A3, A5-9
 
 ```bash
 # Pulang
-route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.217
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.217
 # A4
-route add -net 192.245.1.0 netmask 255.255.255.128 gw 192.245.1.194
+post-up route add -net 192.245.1.0 netmask 255.255.255.128 gw 192.245.1.194
 ```
 
 #### BalletTwins (Router) - Selain A3, A4, A5-9
 
 ```bash
 # Pulang (Termasuk A1 dan A2)
-route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.192
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.192
 ```
 
 #### SixStreet (Router) - Selain A1-4, A5, A6, A7
 
 ```bash
 # Pulang
-route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.221
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.221
 # A8 dan A9
-route add -net 192.245.1.128 netmask 255.255.255.192 gw 192.245.1.210
-route add -net 192.245.1.224 netmask 255.255.255.252 gw 192.245.1.211
+post-up route add -net 192.245.1.128 netmask 255.255.255.192 gw 192.245.1.210
+post-up route add -net 192.245.1.224 netmask 255.255.255.252 gw 192.245.1.211
 ```
 
 #### OuterRing (Router) - Selain A1-4, A7, A8
 
 ```bash
 # Pulang
-route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.209
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.209
 # A9
-route add -net 192.245.1.224 netmask 255.255.255.252 gw 192.245.1.211
+post-up route add -net 192.245.1.224 netmask 255.255.255.252 gw 192.245.1.211
 ```
 #### ScootOutpost (Router) - Selain A1-4, A7, A9
 
 ```bash
 # Pulang
-route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.209
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.245.1.209
 # A8
-route add -net 192.245.1.128 netmask 255.255.255.192 gw 192.245.1.210
+post-up route add -net 192.245.1.128 netmask 255.255.255.192 gw 192.245.1.210
 ```
 
 ## Soal 4: Konfigurasi
