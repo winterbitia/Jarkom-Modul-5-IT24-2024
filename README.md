@@ -44,6 +44,7 @@
 		- [DHCP Relay: dhcp-relay.sh](#dhcp-relay-dhcp-relaysh)
 		- [DNS Server: dns.sh](#dns-server-dnssh)
 		- [Web Server: webserver.sh](#web-server-webserversh)
+		- [Client: Install Keperluan](#client-install-keperluan)
 - [Misi 2: Menemukan Jejak Sang Peretas](#misi-2-menemukan-jejak-sang-peretas)
 	- [Soal 1: IPTABLES](#soal-1-iptables)
 		- [iptables.sh](#iptablessh)
@@ -459,9 +460,14 @@ service bind9 restart
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 apt-get update && apt-get install apache2 -y
 
-echo "Welcome to $HOST" > /var/www/html/index.html
+echo "Welcome to $(hostname)" > /var/www/html/index.html
 
 service apache2 restart
+```
+
+### Client: Install Keperluan
+```bash
+post-up apt-get update && apt-get install lynx netcat -y 
 ```
 
 # Misi 2: Menemukan Jejak Sang Peretas
