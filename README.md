@@ -249,14 +249,14 @@ iface eth0 inet static
 
 ```
 #A7
-auto eth2
-iface eth2 inet static
+auto eth0
+iface eth0 inet static
 	address 192.245.1.209
 	netmask 255.255.255.248
 	gateway 192.245.1.208
 #A8
-auto eth2
-iface eth2 inet static
+auto eth1
+iface eth1 inet static
 	address 192.245.1.129
 	netmask 255.255.255.192
 ```
@@ -280,13 +280,13 @@ iface eth0 inet dhcp
 
 ```
 #A7
-auto eth2
+auto eth0
 iface eth2 inet static
 	address 192.245.1.210
 	netmask 255.255.255.248
 	gateway 192.245.1.208
 #A9
-auto eth0
+auto eth1
 iface eth0 inet static
 	address 192.245.1.225
 	netmask 255.255.255.252
