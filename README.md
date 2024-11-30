@@ -281,13 +281,13 @@ iface eth0 inet dhcp
 ```
 #A7
 auto eth0
-iface eth2 inet static
+iface eth0 inet static
 	address 192.245.1.210
 	netmask 255.255.255.248
 	gateway 192.245.1.208
 #A9
 auto eth1
-iface eth0 inet static
+iface eth1 inet static
 	address 192.245.1.225
 	netmask 255.255.255.252
 ```
@@ -472,6 +472,7 @@ service apache2 restart
 Dengan command parsing untuk mendapatkan IP eth0 yang menggunakan dhcp:
 
 ```bash
-ETH0_IP=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+ETH0_IP=$(ip -4 addr show eth0 | grep -oE '([0-9]{1,3}\.){3}([0-9]{1,3})' | head -n 1)
+echo $ETH0_IP
 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $ETH0_IP
 ```
