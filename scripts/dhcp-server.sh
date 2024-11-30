@@ -16,7 +16,7 @@ subnet 192.245.0.0 netmask 255.255.255.0 {
 }
 # Ellen & Lycaon (A4)
 subnet 192.245.1.0 netmask 255.255.255.128 {
-  range 192.245.1.2 192.245.1.254;
+  range 192.245.1.2 192.245.1.126;
   option routers 192.245.1.1;
   option broadcast-address 192.245.1.127;
   option domain-name-servers 192.245.1.203;
@@ -28,6 +28,8 @@ subnet 192.245.1.128 netmask 255.255.255.192 {
   option broadcast-address 192.245.1.191;
   option domain-name-servers 192.245.1.203;
 }
+# DHCP server
+subnet 192.245.1.200 netmask 255.255.255.248 {}
 ' > /etc/dhcp/dhcpd.conf
 
 service isc-dhcp-server restart

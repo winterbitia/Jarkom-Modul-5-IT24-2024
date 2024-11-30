@@ -219,7 +219,7 @@ iface eth1 inet static
 #A7
 auto eth2
 iface eth2 inet static
-	address 192.245.1.208
+	address 192.245.1.209
 	netmask 255.255.255.248
 ```
 
@@ -251,9 +251,9 @@ iface eth0 inet static
 #A7
 auto eth0
 iface eth0 inet static
-	address 192.245.1.209
+	address 192.245.1.210
 	netmask 255.255.255.248
-	gateway 192.245.1.208
+	gateway 192.245.1.209
 #A8
 auto eth1
 iface eth1 inet static
@@ -282,9 +282,9 @@ iface eth0 inet dhcp
 #A7
 auto eth0
 iface eth0 inet static
-	address 192.245.1.210
+	address 192.245.1.211
 	netmask 255.255.255.248
-	gateway 192.245.1.208
+	gateway 192.245.1.209
 #A9
 auto eth1
 iface eth1 inet static
@@ -394,7 +394,7 @@ subnet 192.245.0.0 netmask 255.255.255.0 {
 }
 # Ellen & Lycaon (A4)
 subnet 192.245.1.0 netmask 255.255.255.128 {
-  range 192.245.1.2 192.245.1.254;
+  range 192.245.1.2 192.245.1.126;
   option routers 192.245.1.1;
   option broadcast-address 192.245.1.127;
   option domain-name-servers 192.245.1.203;
@@ -406,6 +406,8 @@ subnet 192.245.1.128 netmask 255.255.255.192 {
   option broadcast-address 192.245.1.191;
   option domain-name-servers 192.245.1.203;
 }
+# DHCP server
+subnet 192.245.1.200 netmask 255.255.255.248 {}
 ' > /etc/dhcp/dhcpd.conf
 
 service isc-dhcp-server restart
@@ -472,6 +474,7 @@ service apache2 restart
 Dengan command parsing untuk mendapatkan IP eth0 yang menggunakan dhcp:
 
 ```bash
+echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 ETH0_IP=$(ip -4 addr show eth0 | grep -oE '([0-9]{1,3}\.){3}([0-9]{1,3})' | head -n 1)
 echo $ETH0_IP
 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $ETH0_IP
