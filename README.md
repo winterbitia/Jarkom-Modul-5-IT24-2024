@@ -46,8 +46,16 @@
 		- [Web Server: webserver.sh](#web-server-webserversh)
 		- [Client: Install Keperluan](#client-install-keperluan)
 - [Misi 2: Menemukan Jejak Sang Peretas](#misi-2-menemukan-jejak-sang-peretas)
-	- [Soal 1: IPTABLES](#soal-1-iptables)
-		- [iptables.sh](#iptablessh)
+	- [Soal 1: iptables.sh - NewEridu](#soal-1-iptablessh---neweridu)
+	- [Soal 2: iptables.sh - Fairy](#soal-2-iptablessh---fairy)
+	- [Soal 3: iptables.sh - HDD](#soal-3-iptablessh---hdd)
+	- [Soal 4: iptables.sh - HollowZero](#soal-4-iptablessh---hollowzero)
+	- [Soal 5: iptables.sh - HIA](#soal-5-iptablessh---hia)
+	- [Soal 6: iptables.sh - HIA](#soal-6-iptablessh---hia)
+	- [Soal 7: iptables.sh - HollowZero](#soal-7-iptablessh---hollowzero)
+	- [Soal 8: iptables.sh - Burnice](#soal-8-iptablessh---burnice)
+- [Misi 3: Menangkap Burnice](#misi-3-menangkap-burnice)
+	- [Soal 1: capture.sh - Burnice](#soal-1-capturesh---burnice)
 
 # Misi 1: Memetakan Kota New Eridu
 
@@ -307,9 +315,6 @@ iface eth0 inet static
 
 ### Routing
 
-Untuk routing diperlukan sebuah script untuk dijalankan ketika mesin menyala, contoh:
-`bash routing.sh` untuk dimasukkan `.bashrc`
-
 #### NewEridu (Router) - Selain A1, A5
 
 ```bash
@@ -378,7 +383,7 @@ post-up route add -net 192.245.1.128 netmask 255.255.255.192 gw 192.245.1.210
 ### DHCP Server: dhcp-server.sh
 ```bash
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
-apt-get update && apt-get install isc-dhcp-server -y
+apt-get update && apt-get install isc-dhcp-server netcat -y
 
 echo '
 INTERFACESv4="eth0"
@@ -436,7 +441,7 @@ service isc-dhcp-relay restart
 ### DNS Server: dns.sh
 ```bash
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
-apt-get update && apt-get install bind9 -y
+apt-get update && apt-get install bind9 netcat -y
 
 echo 'options {
     directory "/var/cache/bind";
@@ -467,16 +472,15 @@ service apache2 restart
 
 ### Client: Install Keperluan
 ```bash
-post-up apt-get update && apt-get install lynx netcat -y 
+apt-get update && apt-get install lynx netcat nmap -y 
 ```
 
 # Misi 2: Menemukan Jejak Sang Peretas
 
-## Soal 1: IPTABLES
+## Soal 1: iptables.sh - NewEridu
 
 > Agar jaringan di New Eridu bisa terhubung ke luar (internet), kalian perlu mengkonfigurasi routing menggunakan iptables. Namun, kalian tidak diperbolehkan menggunakan MASQUERADE
 
-### iptables.sh
 Dengan command parsing untuk mendapatkan IP eth0 yang menggunakan dhcp:
 
 ```bash
@@ -484,4 +488,154 @@ echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 ETH0_IP=$(ip -4 addr show eth0 | grep -oE '([0-9]{1,3}\.){3}([0-9]{1,3})' | head -n 1)
 echo $ETH0_IP
 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $ETH0_IP
+```
+
+## Soal 2: iptables.sh - Fairy
+
+> Karena Fairy adalah Al yang sangat berharga, kalian perlu memastikan bahwa tidak ada perangkat lain yang bisa melakukan ping ke Fairy. Tapi Fairy tetap dapat mengakses seluruh perangkat.
+
+
+```bash
+# block pings TO fairy
+iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+# allow pings FROM fairy
+iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+```
+
+Revert:
+```bash
+# block pings TO fairy
+iptables -D INPUT -p icmp --icmp-type echo-request -j DROP
+# allow pings FROM fairy
+iptables -D OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+```
+
+## Soal 3: iptables.sh - HDD
+
+> Selain itu, agar kejadian sebelumnya tidak terulang, hanya Fairy yang dapat mengakses HDD. Gunakan nc (netcat) untuk memastikan akses ini. [hapus aturan iptables setelah pengujian selesai agar internet tetap dapat diakses.]
+
+
+```bash
+# accept from fairy
+iptables -A INPUT -s 192.245.1.202 -j ACCEPT
+# block everything else
+iptables -A INPUT -j REJECT 
+```
+
+Revert:
+```bash
+# accept from fairy
+iptables -A INPUT -s 192.245.1.202 -j ACCEPT
+# block everything else
+iptables -A INPUT -j REJECT 
+```
+
+Test: 
+* `nc 192.245.1.203 1234` - Fairy
+* `nc -nvlp 1234` - HDD
+
+## Soal 4: iptables.sh - HollowZero
+
+> Fairy mendeteksi aktivitas mencurigakan di server Hollow. Namun, berdasarkan peraturan polisi New Eridu, Hollow hanya boleh diakses pada hari Senin hingga Jumat dan hanya oleh faksi SoC (Burnice & Caesar) dan PubSec (Jane & Policeboo). Karena hari ini hari Sabtu, mereka harus menunggu hingga hari Senin. Gunakan curl untuk memastikan akses ini.
+
+```bash
+# Input IP Burnice, Caesar, Jane, and Policeboo
+iptables -A INPUT -p tcp -s 192.245.x.x --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -p tcp -s 192.245.x.x --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -p tcp -s 192.245.x.x --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -p tcp -s 192.245.x.x --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -j REJECT
+```
+
+Test: `curl http://192.245.1.226`
+
+## Soal 5: iptables.sh - HIA
+
+> Sembari menunggu, Fairy menyarankan Phaethon untuk berlatih di server HIA dan meminta bantuan dari faksi Victoria (Ellen & Lycaon) dan PubSec. Akses HIA hanya diperbolehkan untuk
+>
+> a. Ellen dan Lycaon pada jam 08.00-21.00.
+>
+> b. Jane dan Policeboo pada jam 03.00-23.00. (hak kepolisian)
+>
+> Gunakan curl untuk memastikan akses ini.
+
+```bash
+# Ellen & Lycaon (08:00 - 21:00)
+iptables -A INPUT -p tcp -s 192.245.x.x --dport 80 -m time --timestart 01:00 --timestop 14:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat,Sun -j ACCEPT
+iptables -A INPUT -p tcp -s 192.245.x.x --dport 80 -m time --timestart 01:00 --timestop 14:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat,Sun -j ACCEPT
+
+# Jane & Policeboo (03:00 - 23:00)
+iptables -A INPUT -p tcp -s 192.245.x.x --dport 80 -m time --timestart 20:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat,Sun -j ACCEPT
+iptables -A INPUT -p tcp -s 192.245.x.x --dport 80 -m time --timestart 20:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat,Sun -j ACCEPT
+
+iptables -A INPUT -p tcp --dport 80 -j REJECT # reject other requests
+```
+
+Test: `curl 192.245.1.x` (harus di UTC time)
+
+## Soal 6: iptables.sh - HIA
+
+> Sebagai bagian dari pelatihan, PubSec diminta memperketat keamanan jaringan di server HIA. Jane dan Policeboo melakukan simulasi port scan menggunakan nmap pada rentang port 1-100.
+>
+> a. Web server harus memblokir aktivitas scan port yang melebihi 25 port secara otomatis dalam rentang waktu 10 detik.
+>
+> b. Penyerang yang terblokir tidak dapat melakukan ping, nc, atau curl ke HIA.
+>
+> c. Catat log dari iptables untuk keperluan analisis dan dokumentasikan dalam format PDF.
+
+```bash
+# rate limit -  25conn/10s
+iptables -N PORTSCAN
+iptables -A INPUT -p tcp --dport 1:100 -m state --state NEW -m recent --set --name portscan
+iptables -A INPUT -p tcp --dport 1:100 -m state --state NEW -m recent --update --seconds 10 --hitcount 25 --name portscan -j PORTSCAN
+
+# block attackers (port scanning)
+iptables -A PORTSCAN -m recent --set --name blacklist
+iptables -A PORTSCAN -j DROP
+
+# block all activities from blacklisted IPs
+iptables -A INPUT -m recent --name blacklist --rcheck -j REJECT
+iptables -A OUTPUT -m recent --name blacklist --rcheck -j REJECT
+
+iptables -A PORTSCAN -j LOG --log-prefix='PORT SCAN DETECTED' --log-level 4 # logging
+```
+
+Test: `nmap -p 1-100 192.245.1.195`, ping, curl, nc
+
+## Soal 7: iptables.sh - HollowZero
+
+> Hari Senin tiba, dan Fairy menyarankan membatasi akses ke server Hollow. Akses ke Hollow hanya boleh berasal dari 2 koneksi aktif dari 2 IP yang berbeda dalam waktu bersamaan. Burnice, Caesar, Jane, dan Policeboo diminta melakukan uji coba menggunakan curl.
+
+```bash
+# max 2 conns from 2 diff IPs
+iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --set
+iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --update --seconds 1 --hitcount 3 -j REJECT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+```
+
+Test: 4 Node bersamaan ke http://192.245.1.226
+
+## Soal 8: iptables.sh - Burnice
+
+> Selama uji coba, Fairy mendeteksi aktivitas mencurigakan dari Burnice. Setiap paket yang dikirim Fairy ke Burnice ternyata dialihkan ke HollowZero. Gunakan nc untuk memastikan alur pengalihan ini.
+
+
+```bash
+iptables -t nat -A PREROUTING -p tcp -j DNAT --to-destination 192.245.1.226 --dport 8080
+iptables -A FORWARD -p tcp -d 192.245.1.226 -j ACCEPT
+```
+
+Setelah menjalankan command diatas, nc yang mengarah ke Burnice seharusnya dialihkan ke HollowZero (192.245.1.226), dan bisa dicek melalui tcpdump: `tcpdump -i eth0 host 192.245.1.x and port 8080`
+
+# Misi 3: Menangkap Burnice
+
+## Soal 1: capture.sh - Burnice
+
+> Mengetahui hal tersebut Wise dan Belle mengambil langkah drastis: memblokir semua lalu lintas yang masuk dan keluar dari Burnice, gunakan nc dan ping. **Burnice ya bukan Caesar**
+
+
+```bash
+iptables --policy INPUT DROP
+iptables --policy OUTPUT DROP
+iptables --policy FORWARD DROP
 ```
