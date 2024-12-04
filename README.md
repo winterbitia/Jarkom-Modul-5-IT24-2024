@@ -76,11 +76,13 @@ Client:
   Jane: Memiliki 200 host.
 ```
 
-![GNS3](assets/topologi.jpeg)
+![topologi](assets/topologi.jpeg)
 
 ## Soal 2: VLSM
 
 > Setelah membagi alamat IP menggunakan VLSM, gambarkan pohon subnet yang menunjukkan hierarki pembagian IP di jaringan New Eridu. Lingkari subnet-subnet yang akan dilewati dalam jaringan.
+### Tree
+![tree](assets/IT24_Tree.drawio.png)
 
 ### Routing Table
 
