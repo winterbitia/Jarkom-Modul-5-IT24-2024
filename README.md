@@ -12,6 +12,7 @@
 - [Misi 1: Memetakan Kota New Eridu](#misi-1-memetakan-kota-new-eridu)
 	- [Soal 1: Topologi](#soal-1-topologi)
 	- [Soal 2: VLSM](#soal-2-vlsm)
+		- [Tree](#tree)
 		- [Routing Table](#routing-table)
 		- [Pembagian IP](#pembagian-ip)
 	- [Soal 3: Subnetting/Routing](#soal-3-subnettingrouting)
@@ -527,9 +528,9 @@ iptables -A INPUT -j REJECT
 Revert:
 ```bash
 # accept from fairy
-iptables -A INPUT -s 192.245.1.202 -j ACCEPT
+iptables -D INPUT -s 192.245.1.202 -j ACCEPT
 # block everything else
-iptables -A INPUT -j REJECT 
+iptables -D INPUT -j REJECT 
 ```
 
 Test: 
@@ -573,7 +574,7 @@ iptables -A INPUT -p tcp -s 192.245.x.x --dport 80 -m time --timestart 20:00 --t
 iptables -A INPUT -p tcp --dport 80 -j REJECT # reject other requests
 ```
 
-Test: `curl 192.245.1.x` (harus di UTC time)
+Test: `curl http://192.245.1.195` (harus di UTC time)
 
 ## Soal 6: iptables.sh - HIA
 
@@ -615,7 +616,7 @@ iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --updat
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 ```
 
-Test: 4 Node bersamaan ke http://192.245.1.226
+Test: `parallel curl -s http://IP-HollowZero ::: 192.245.1.x 192.245.1.x 192.245.0.x 192.245.0.x`
 
 ## Soal 8: iptables.sh - Burnice
 
@@ -625,6 +626,11 @@ Test: 4 Node bersamaan ke http://192.245.1.226
 ```bash
 iptables -t nat -A PREROUTING -p tcp -j DNAT --to-destination 192.245.1.226 --dport 8080
 iptables -A FORWARD -p tcp -d 192.245.1.226 -j ACCEPT
+```
+
+```bash
+nc 192.245.1.x 8080 #IP Burnice
+nc -nlvp 8080 #Accept TCP
 ```
 
 Setelah menjalankan command diatas, nc yang mengarah ke Burnice seharusnya dialihkan ke HollowZero (192.245.1.226), dan bisa dicek melalui tcpdump: `tcpdump -i eth0 host 192.245.1.x and port 8080`
